@@ -6,14 +6,8 @@ import (
 )
 
 func main() {
-	i := 0
-	i = 5
-
-	var k int8 = 0
-
-	fmt.Println(i)
-	fmt.Println(k)
-
+	currentConfig := setConfig()
+	listen := currentConfig.host + ":" + currentConfig.port
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		_, err := fmt.Fprintf(w, "Hello, you're at %s", r.URL.Path)
 		if err != nil {
@@ -21,7 +15,7 @@ func main() {
 		}
 	})
 
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(listen, nil)
 	if err != nil {
 		return
 	}
