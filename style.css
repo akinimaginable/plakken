@@ -1,0 +1,87 @@
+:root {
+    --accent: #0080e5;
+    --background: #121212;
+    --border: #2d2d2d;
+    --text: #f1f4f5;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text);
+    font: 400 15px/2 "system-ui", monospace;
+    margin: 0;
+}
+
+textarea {
+    appearance: none;
+    color: var(--text);
+    font: 14px/1.6 "JetBrains Mono", monospace;
+    height: calc(100vh - 5rem - 6px);
+    outline: none;
+    padding: 1rem;
+    resize: none;
+    width: calc(100vw - 2rem);
+}
+
+nav {
+    align-items: end;
+    bottom: 1rem;
+    display: flex;
+    flex-flow: row wrap;
+    position: absolute;
+    right: 1rem;
+}
+
+ul {
+    display: flex;
+    flex-flow: row wrap;
+    list-style: none;
+    gap: 2.6rem;
+    height: 60px;
+    margin: 0;
+    padding: 0 1rem;
+    width: fit-content;
+}
+
+label {
+    display: block;
+}
+
+input, select {
+    appearance: none;
+    background-color: var(--background);
+    border: 2px solid var(--border);
+    border-radius: 2px;
+    color: var(--text);
+    font-size: 15px;
+    padding: 5px 6px;
+    transition: border .15s ease;
+}
+
+button, textarea {
+    background-color: var(--background);
+    border: none;
+}
+
+svg {
+    fill: none;
+    stroke: #ddd;
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: .15s ease;
+}
+
+input:hover, select:hover, svg:hover {
+    border-color: #ddd;
+    stroke: #fff;
+}
+
+/*::selection {
+    background-color: var(--text);
+    color: var(--background);
+}*/
+
+::selection {
+    background-color: #be0560;
+    color: #fff;
+}
