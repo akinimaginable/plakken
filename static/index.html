@@ -9,30 +9,32 @@
     <link href="/static/style.css" rel="stylesheet">
 </head>
 <body>
-<label for="content"></label>
-<textarea id="content" name="content" placeholder="Your paste here"></textarea>
-<nav>
-    <ul>
-        <li>
-            <label for="password">Password?</label>
-            <input id="password" type="text">
-        </li>
-        <li><label for="exp">Expiration?</label>
-            <input id="exp" type="date"></li>
-        <li>
-            <label for="type">Type</label>
-            <select id="type" name="type">
-                <option value="">Plaintext</option>
-                <option value="">Python</option>
-            </select>
-        </li>
-    </ul>
-    <button>
-        <svg height="26" viewBox="0 0 24 24" width="26" xmlns="http://www.w3.org/2000/svg">
-            <polyline points="9 11 12 14 22 4"></polyline>
-            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-        </svg>
-    </button>
-</nav>
+<form>
+    <label for="content"></label>
+    <textarea id="content" name="content" placeholder="Your paste here"></textarea>
+    <nav>
+        <ul>
+            <li>
+                <label for="password">Password?</label>
+                <input id="password" type="text">
+            </li>
+            <li><label for="exp">Expiration?</label>
+                <input id="exp" type="date"></li>
+            <li>
+                <label for="type">Type</label>
+                <select id="type" name="type">
+                    <option value="">Plaintext</option>
+                    <option value="">Python</option>
+                </select>
+            </li>
+        </ul>
+        <button>
+            <svg height="26" viewBox="0 0 24 24" width="26" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="9 11 12 14 22 4"></polyline>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+        </button>
+    </nav>
+</form>
 </body>
 </html>
