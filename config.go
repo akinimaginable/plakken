@@ -12,6 +12,7 @@ type config struct {
 	redisUser     string
 	redisPassword string
 	redisDB       int
+	urlLength     int
 }
 
 func setConfig() config {
@@ -33,6 +34,10 @@ func setConfig() config {
 		redisDB = 0
 	}
 
+	urlLength, err := strconv.Atoi("PLAKKEN_URL_LENGTH")
+	if err != nil {
+		urlLength = 3
+	}
 	s := config{
 		host:          host,
 		port:          port,
@@ -40,6 +45,7 @@ func setConfig() config {
 		redisUser:     redisUser,
 		redisPassword: redisPassword,
 		redisDB:       redisDB,
+		urlLength:     urlLength,
 	}
 
 	return s
