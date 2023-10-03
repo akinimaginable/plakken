@@ -28,9 +28,15 @@ func insertPaste(key string, content string, secret string, ttl time.Duration) {
 		content: content,
 		secret:  secret,
 	}
-	connectDB().HSet(ctx, key, "content", hash.content)
-	connectDB().HSet(ctx, key, "secret", hash.secret)
+	db := connectDB()
+	db.HSet(ctx, key, "content", hash.content)
+	db.HSet(ctx, key, "secret", hash.secret)
 	if ttl > -1 {
 		connectDB().Do(ctx, key, ttl)
 	}
+}
+
+func getContent(key string) string {
+	db := connectDB()
+	return db.HGet(ctx, key, "content").Val()
 }

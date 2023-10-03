@@ -10,7 +10,7 @@ import (
 var currentConfig config
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path
+	path := strings.ReplaceAll(r.URL.Path, "/raw", "")
 	switch r.Method {
 	case "GET":
 		if path == "/" {
@@ -21,7 +21,13 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			http.Handle("/static/", http.StripPrefix("/static/", fs))
 		} else {
 			if urlExist(path) {
-				io.WriteString(w, "exist")
+				pasteContent := getContent(path)
+				fmt.Println(pasteContent)
+				if strings.HasSuffix("/raw", path) {
+					io.WriteString(w, pasteContent)
+				} else {
+					io.WriteString(w, pasteContent)
+				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
 			}
