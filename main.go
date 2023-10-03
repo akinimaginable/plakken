@@ -15,13 +15,15 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		if path == "/" {
 			http.ServeFile(w, r, "./static/index.html")
-
 		} else if strings.HasPrefix(path, "/static/") {
 			fs := http.FileServer(http.Dir("./static"))
 			http.Handle("/static/", http.StripPrefix("/static/", fs))
 		} else {
 			if urlExist(path) {
-				io.WriteString(w, "exist")
+				_, err := io.WriteString(w, "This plak exists")
+				if err != nil {
+					return
+				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
 			}
@@ -37,7 +39,6 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
 	}
-
 }
 
 func main() {
