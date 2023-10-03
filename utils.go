@@ -1,7 +1,9 @@
 package main
 
 import (
-	"math/rand"
+	"crypto/rand"
+	"encoding/hex"
+	mathrand "math/rand"
 )
 
 func generateUrl() string {
@@ -9,21 +11,21 @@ func generateUrl() string {
 	listChars := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	b := make([]rune, length)
 	for i := range b {
-		b[i] = listChars[rand.Intn(len(listChars))]
+		b[i] = listChars[mathrand.Intn(len(listChars))]
 	}
 
 	return string(b)
 }
 
 func generateSecret() string {
-	length := 32
-	listChars := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	b := make([]rune, length)
-	for i := range b {
-		b[i] = listChars[rand.Intn(len(listChars))]
+	key := make([]byte, 32)
+	_, err := rand.Read(key)
+	if err != nil {
+		// handle error here
 	}
 
-	return string(b)
+	secret := hex.EncodeToString(key)
+	return secret
 }
 
 func urlExist(url string) bool {
