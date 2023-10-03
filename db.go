@@ -18,7 +18,7 @@ func connectDB() *redis.Client {
 	return db
 }
 
-func insert_paste(key string, content string, secret string, ttl time.Duration) {
+func insertPaste(key string, content string, secret string, ttl time.Duration) {
 	type dbSchema struct {
 		content string
 		secret  string
