@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -42,12 +43,18 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	currentConfig = setConfig()
+	currentConfig = getConfig()
 	listen := currentConfig.host + ":" + currentConfig.port
 	http.HandleFunc("/", handleRequest)
 
+	if currentConfig.host == "" {
+		fmt.Println("Listening on port " + listen)
+	} else {
+		fmt.Println("Listening on " + listen)
+	}
+
 	err := http.ListenAndServe(listen, nil)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 }
