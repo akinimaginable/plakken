@@ -11,7 +11,7 @@ import (
 var currentConfig config
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path
+	path := strings.ReplaceAll(r.URL.Path, "/raw", "")
 	switch r.Method {
 	case "GET":
 		if path == "/" {
