@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -15,18 +16,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		if path == "/" {
 			http.ServeFile(w, r, "./static/index.html")
-
 		} else if strings.HasPrefix(path, "/static/") {
 			fs := http.FileServer(http.Dir("./static"))
 			http.Handle("/static/", http.StripPrefix("/static/", fs))
 		} else {
 			if urlExist(path) {
-				pasteContent := getContent(path)
-				fmt.Println(pasteContent)
-				if strings.HasSuffix("/raw", path) {
-					io.WriteString(w, pasteContent)
-				} else {
-					io.WriteString(w, pasteContent)
+				_, err := io.WriteString(w, "This plak exists")
+				if err != nil {
+					return
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
@@ -43,16 +40,21 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
 	}
-
 }
 
 func main() {
-	currentConfig = setConfig()
+	currentConfig = getConfig()
 	listen := currentConfig.host + ":" + currentConfig.port
 	http.HandleFunc("/", handleRequest)
 
+	if currentConfig.host == "" {
+		fmt.Println("Listening on port " + listen)
+	} else {
+		fmt.Println("Listening on " + listen)
+	}
+
 	err := http.ListenAndServe(listen, nil)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 }

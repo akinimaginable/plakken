@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
+	"log"
 	"os"
 	"strconv"
 )
@@ -15,38 +17,40 @@ type config struct {
 	urlLength     int
 }
 
-func setConfig() config {
-	host := os.Getenv("PLAKKEN_HOST")
+func getConfig() config {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
 
 	port := os.Getenv("PLAKKEN_PORT")
-	if port == "" {
-		port = "3000"
-	}
 	redisAddr := os.Getenv("PLAKKEN_REDIS_ADDR")
-	if redisAddr == "" {
-		redisAddr = "localhost:6379"
+	db := os.Getenv("PLAKKEN_REDIS_DB")
+	uLen := os.Getenv("PLAKKEN_REDIS_URL_LEN")
+
+	if port == "" || redisAddr == "" {
+		log.Fatal("Missing or invalid PLAKKEN_PORT or PLAKKEN_REDIS_ADDR")
 	}
 
-	redisUser := os.Getenv("PLAKKEN_REDIS_USER")
-	redisPassword := os.Getenv("PLAKKEN_REDIS_PASSWORD")
-	redisDB, err := strconv.Atoi(os.Getenv("PLAKKEN_REDIS_DB"))
+	redisDB, err := strconv.Atoi(db)
 	if err != nil {
-		redisDB = 0
+		log.Fatal("Invalid PLAKKEN_REDIS_DB")
 	}
 
-	urlLength, err := strconv.Atoi("PLAKKEN_URL_LENGTH")
+	urlLen, err := strconv.Atoi(uLen)
 	if err != nil {
-		urlLength = 3
+		log.Fatal("Invalid PLAKKEN_REDIS_URL_LEN")
 	}
-	s := config{
-		host:          host,
+
+	conf := config{
+		host:          os.Getenv("PLAKKEN_INTERFACE"),
 		port:          port,
 		redisAddr:     redisAddr,
-		redisUser:     redisUser,
-		redisPassword: redisPassword,
+		redisUser:     os.Getenv("PLAKKEN_REDIS_USER"),
+		redisPassword: os.Getenv("PLAKKEN_REDIS_PASSWORD"),
 		redisDB:       redisDB,
-		urlLength:     urlLength,
+		urlLength:     urlLen,
 	}
 
-	return s
+	return conf
 }
