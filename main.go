@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -9,6 +10,11 @@ import (
 )
 
 var currentConfig config
+
+type pasteView struct {
+	Content string
+	Key     string
+}
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
@@ -25,14 +31,19 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		} else {
 			if urlExist(clearPath) {
 				if strings.HasSuffix(path, "/raw") {
-					content := db.HGet(ctx, clearPath, "content").Val()
-					_, err := io.WriteString(w, content)
+					pasteContent := db.HGet(ctx, clearPath, "content").Val()
+					_, err := io.WriteString(w, pasteContent)
 					if err != nil {
 						log.Println(err)
 					}
 				} else {
-					content := db.HGet(ctx, path, "content").Val()
-					_, err := io.WriteString(w, content)
+					pasteContent := db.HGet(ctx, path, "content").Val()
+					s := pasteView{Content: pasteContent, Key: strings.TrimPrefix(path, "/")}
+					t, err := template.ParseFiles("templates/paste.html")
+					if err != nil {
+						log.Println(err)
+					}
+					err = t.Execute(w, s)
 					if err != nil {
 						log.Println(err)
 					}
