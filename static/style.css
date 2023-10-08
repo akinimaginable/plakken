@@ -1,8 +1,8 @@
 :root {
-    --accent: #0080e5;
-    --background: #121212;
-    --border: #2d2d2d;
-    --text: #f1f4f5;
+    --accent: #be0560;
+    --background: #141414;
+    --border: #333;
+    --text: #e2e2e2;
 }
 
 body {
@@ -12,11 +12,15 @@ body {
     margin: 0;
 }
 
+button, textarea {
+    background-color: inherit;
+    border: none;
+}
+
 textarea {
-    appearance: none;
     color: var(--text);
     font: 14px/1.6 "JetBrains Mono", monospace;
-    height: calc(100vh - 5rem - 6px);
+    height: calc(100vh - 3rem);
     outline: none;
     padding: 1rem;
     resize: none;
@@ -35,12 +39,10 @@ nav {
 ul {
     display: flex;
     flex-flow: row wrap;
-    list-style: none;
     gap: 2.6rem;
-    height: 60px;
+    list-style: none;
     margin: 0;
-    padding: 0 1rem;
-    width: fit-content;
+    padding: 0 1.9rem;
 }
 
 label {
@@ -48,40 +50,43 @@ label {
 }
 
 input, select {
-    appearance: none;
     background-color: var(--background);
     border: 2px solid var(--border);
     border-radius: 2px;
     color: var(--text);
     font-size: 15px;
+    outline: none;
     padding: 5px 6px;
     transition: border .15s ease;
 }
 
-button, textarea {
-    background-color: var(--background);
-    border: none;
+input:hover, select:hover {
+    border-color: var(--text);
 }
 
 svg {
     fill: none;
-    stroke: #ddd;
+    height: 26px;
+    stroke: var(--text);
     stroke-width: 2;
     stroke-linecap: round;
     transition: .15s ease;
+    width: 26px;
 }
 
-input:hover, select:hover, svg:hover {
-    border-color: #ddd;
+svg:hover {
     stroke: #fff;
 }
 
-/*::selection {
-    background-color: var(--text);
-    color: var(--background);
-}*/
+input:focus-visible, select:focus-visible {
+    border: 2px solid var(--text);
+}
+
+button:focus-visible{
+    outline: none;
+}
 
 ::selection {
-    background-color: #be0560;
+    background-color: var(--accent);
     color: #fff;
 }

@@ -17,3 +17,4 @@ plakken
 
 # Go workspace file
 go.work
+.idea/discord.xml
