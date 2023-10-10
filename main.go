@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -10,20 +11,42 @@ import (
 
 var currentConfig config
 
+type pasteView struct {
+	Content string
+	Key     string
+}
+
 func handleRequest(w http.ResponseWriter, r *http.Request) {
-	path := strings.ReplaceAll(r.URL.Path, "/raw", "")
+	path := r.URL.Path
+	clearPath := strings.ReplaceAll(r.URL.Path, "/raw", "")
+	db := connectDB()
 	switch r.Method {
 	case "GET":
 		if path == "/" {
 			http.ServeFile(w, r, "./static/index.html")
+
 		} else if strings.HasPrefix(path, "/static/") {
 			fs := http.FileServer(http.Dir("./static"))
 			http.Handle("/static/", http.StripPrefix("/static/", fs))
 		} else {
-			if urlExist(path) {
-				_, err := io.WriteString(w, "This plak exists")
-				if err != nil {
-					return
+			if urlExist(clearPath) {
+				if strings.HasSuffix(path, "/raw") {
+					pasteContent := db.HGet(ctx, clearPath, "content").Val()
+					_, err := io.WriteString(w, pasteContent)
+					if err != nil {
+						log.Println(err)
+					}
+				} else {
+					pasteContent := db.HGet(ctx, path, "content").Val()
+					s := pasteView{Content: pasteContent, Key: strings.TrimPrefix(path, "/")}
+					t, err := template.ParseFiles("templates/paste.html")
+					if err != nil {
+						log.Println(err)
+					}
+					err = t.Execute(w, s)
+					if err != nil {
+						log.Println(err)
+					}
 				}
 			} else {
 				w.WriteHeader(http.StatusNotFound)
