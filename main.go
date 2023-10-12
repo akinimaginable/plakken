@@ -32,6 +32,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			if urlExist(clearPath) {
 				if strings.HasSuffix(path, "/raw") {
 					pasteContent := db.HGet(ctx, clearPath, "content").Val()
+					w.Header().Set("Content-Type", "text/plain")
 					_, err := io.WriteString(w, pasteContent)
 					if err != nil {
 						log.Println(err)
@@ -59,6 +60,26 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			content := r.FormValue("content")
 			insertPaste(url, content, secret, -1)
 			http.Redirect(w, r, url, http.StatusSeeOther)
+		} else {
+			w.WriteHeader(http.StatusMethodNotAllowed)
+		}
+	case "DELETE":
+		if strings.HasPrefix(path, "/delete") {
+			urlItem := strings.Split(path, "/")
+			if urlExist("/" + urlItem[2]) {
+				secret := r.URL.Query().Get("secret")
+				if secret == db.HGet(ctx, "/"+urlItem[2], "secret").Val() {
+					err := db.Del(ctx, "/"+urlItem[2])
+					if err != nil {
+						log.Println(err)
+					}
+					w.WriteHeader(http.StatusNoContent)
+				} else {
+					w.WriteHeader(http.StatusForbidden)
+				}
+			} else {
+				w.WriteHeader(http.StatusNotFound)
+			}
 		} else {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
