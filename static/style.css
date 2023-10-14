@@ -27,6 +27,10 @@ textarea {
     width: calc(100vw - 2rem);
 }
 
+pre {
+    margin: 15px;
+}
+
 nav {
     align-items: end;
     bottom: 1rem;
