@@ -32,6 +32,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			if urlExist(clearPath) {
 				if strings.HasSuffix(path, "/raw") {
 					pasteContent := db.HGet(ctx, clearPath, "content").Val()
+					w.Header().Set("Content-Type", "text/plain")
 					_, err := io.WriteString(w, pasteContent)
 					if err != nil {
 						log.Println(err)
