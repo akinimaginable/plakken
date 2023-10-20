@@ -3,19 +3,20 @@ package main
 import (
 	"context"
 	"github.com/redis/go-redis/v9"
+	"log"
 	"time"
 )
 
 var ctx = context.Background()
 
 func connectDB() *redis.Client {
-	db := redis.NewClient(&redis.Options{
+	localDb := redis.NewClient(&redis.Options{
 		Addr:     currentConfig.redisAddr,
 		Username: currentConfig.redisUser,
 		Password: currentConfig.redisPassword,
 		DB:       currentConfig.redisDB,
 	})
-	return db
+	return localDb
 }
 
 func insertPaste(key string, content string, secret string, ttl time.Duration) {
@@ -28,15 +29,24 @@ func insertPaste(key string, content string, secret string, ttl time.Duration) {
 		content: content,
 		secret:  secret,
 	}
-	db := connectDB()
-	db.HSet(ctx, key, "content", hash.content)
-	db.HSet(ctx, key, "secret", hash.secret)
+	err := db.HSet(ctx, key, "content", hash.content)
+	if err != nil {
+		log.Println(err)
+	}
+	err = db.HSet(ctx, key, "secret", hash.secret)
 	if ttl > -1 {
-		connectDB().Do(ctx, key, ttl)
+		db.Do(ctx, key, ttl)
 	}
 }
 
 func getContent(key string) string {
-	db := connectDB()
-	return db.HGet(ctx, key, "content").Val()
+	content := db.HGet(ctx, key, "content").Val()
+	return content
+}
+
+func deleteContent(key string) {
+	err := db.Del(ctx, key)
+	if err != nil {
+		log.Println(err)
+	}
 }
