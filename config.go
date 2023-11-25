@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-type config struct {
+type Config struct {
 	host          string
 	port          string
 	redisAddr     string
@@ -17,7 +17,7 @@ type config struct {
 	urlLength     int
 }
 
-func getConfig() config {
+func GetConfig() Config {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
@@ -42,7 +42,7 @@ func getConfig() config {
 		log.Fatal("Invalid PLAKKEN_REDIS_URL_LEN")
 	}
 
-	conf := config{
+	return Config{
 		host:          os.Getenv("PLAKKEN_INTERFACE"),
 		port:          port,
 		redisAddr:     redisAddr,
@@ -51,6 +51,4 @@ func getConfig() config {
 		redisDB:       redisDB,
 		urlLength:     urlLen,
 	}
-
-	return conf
 }

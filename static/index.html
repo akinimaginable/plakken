@@ -9,50 +9,57 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>New plak • Plakken</title>
     <link href="/static/style.css" rel="stylesheet">
+    <script async src="/static/app.js"></script>
 </head>
 <body>
 <form method="post">
-    <label for="content"></label>
-    <textarea autofocus id="content" name="content" placeholder="Your paste here"></textarea>
-    <nav>
-        <ul>
-            <li>
-                <label for="password">Password?</label>
-                <input id="password" type="text">
-            </li>
-            <li><label for="exp">Expiration?</label>
-                <input id="exp" type="date"></li>
-            <li>
-                <label for="type">Type</label>
-                <select id="type" name="type">
-                    <option value="auto">Auto Detect</option>
-                    <option value="c">C</option>
-                    <option value="cpp">C++</option>
-                    <option value="csharp">C#</option>
-                    <option value="css">CSS</option>
-                    <option value="go">Go</option>
-                    <option value="java">Java</option>
-                    <option value="js">Javascript</option>
-                    <option value="html">HTML</option>
-                    <option selected value="plain">Plaintext</option>
-                    <option value="python">Python</option>
-                    <option value="rb">Ruby</option>
-                    <option value="rs">Rust</option>
-                    <option value="sh">Shell</option>
-                    <option value="sql">SQL</option>
-                    <option value="ts">Typescript</option>
-                    <option value="xml">XML</option>
-                    <option value="yml">YAML</option>
-                </select>
-            </li>
-        </ul>
-        <button type="submit" title="Save plak">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <polyline points="9 11 12 14 22 4"></polyline>
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-            </svg>
-        </button>
-    </nav>
+    <div>
+        <label for="lines"></label>
+        <textarea id="lines" readonly wrap="hard">1</textarea>
+    </div>
+    <div>
+        <label for="content"></label>
+        <textarea autofocus id="content" name="content" placeholder="Your paste here"></textarea>
+        <nav>
+            <ul>
+                <li>
+                    <label for="password">Password?</label>
+                    <input id="password" type="text">
+                </li>
+                <li><label for="exp">Expiration?</label>
+                    <input id="exp" type="date"></li>
+                <li>
+                    <label for="type">Type</label>
+                    <select id="type" name="type">
+                        <option value="auto">Auto Detect</option>
+                        <option value="c">C</option>
+                        <option value="cpp">C++</option>
+                        <option value="csharp">C#</option>
+                        <option value="css">CSS</option>
+                        <option value="go">Go</option>
+                        <option value="java">Java</option>
+                        <option value="js">Javascript</option>
+                        <option value="html">HTML</option>
+                        <option selected value="plain">Plaintext</option>
+                        <option value="python">Python</option>
+                        <option value="rb">Ruby</option>
+                        <option value="rs">Rust</option>
+                        <option value="sh">Shell</option>
+                        <option value="sql">SQL</option>
+                        <option value="ts">Typescript</option>
+                        <option value="xml">XML</option>
+                        <option value="yml">YAML</option>
+                    </select>
+                </li>
+            </ul>
+            <button title="Save plak" type="submit">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+            </button>
+        </nav>
+    </div>
 </form>
 </body>
 </html>

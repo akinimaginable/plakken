@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-var currentConfig config
+var currentConfig Config
 var db *redis.Client
 
 type pasteView struct {
@@ -21,16 +21,17 @@ type pasteView struct {
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	clearPath := strings.ReplaceAll(r.URL.Path, "/raw", "")
+	staticResource := "/static/"
 	switch r.Method {
 	case "GET":
 		if path == "/" {
 			http.ServeFile(w, r, "./static/index.html")
 
-		} else if strings.HasPrefix(path, "/static/") {
+		} else if strings.HasPrefix(path, staticResource) {
 			fs := http.FileServer(http.Dir("./static"))
-			http.Handle("/static/", http.StripPrefix("/static/", fs))
+			http.Handle(staticResource, http.StripPrefix(staticResource, fs))
 		} else {
-			if urlExist(clearPath) {
+			if UrlExist(clearPath) {
 				if strings.HasSuffix(path, "/raw") {
 					pasteContent := getContent(clearPath)
 					w.Header().Set("Content-Type", "text/plain")
@@ -56,8 +57,8 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		}
 	case "POST":
 		if path == "/" {
-			secret := generateSecret()
-			url := "/" + generateUrl()
+			secret := GenerateSecret()
+			url := "/" + GenerateUrl()
 			content := r.FormValue("content")
 			insertPaste(url, content, secret, -1)
 			http.Redirect(w, r, url, http.StatusSeeOther)
@@ -65,28 +66,26 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 		}
 	case "DELETE":
-		if strings.HasPrefix(path, "/delete") {
-			urlItem := strings.Split(path, "/")
-			if urlExist("/" + urlItem[2]) {
-				secret := r.URL.Query().Get("secret")
-				if verifySecret("/"+urlItem[2], secret) {
-					deleteContent("/" + urlItem[2])
-					w.WriteHeader(http.StatusNoContent)
-				} else {
-					w.WriteHeader(http.StatusForbidden)
+		if UrlExist(path) {
+			secret := r.URL.Query().Get("secret")
+			if secret == db.HGet(ctx, path, "secret").Val() {
+				err := db.Del(ctx, path)
+				if err != nil {
+					log.Println(err)
 				}
+				w.WriteHeader(http.StatusNoContent)
 			} else {
-				w.WriteHeader(http.StatusNotFound)
+				w.WriteHeader(http.StatusForbidden)
 			}
 		} else {
-			w.WriteHeader(http.StatusMethodNotAllowed)
+			w.WriteHeader(http.StatusNotFound)
 		}
 	}
 }
 
 func main() {
-	db = connectDB()
-	currentConfig = getConfig()
+	db = ConnectDB()
+	currentConfig = GetConfig()
 	listen := currentConfig.host + ":" + currentConfig.port
 	http.HandleFunc("/", handleRequest)
 

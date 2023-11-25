@@ -9,7 +9,7 @@ import (
 
 var ctx = context.Background()
 
-func connectDB() *redis.Client {
+func ConnectDB() *redis.Client {
 	localDb := redis.NewClient(&redis.Options{
 		Addr:     currentConfig.redisAddr,
 		Username: currentConfig.redisUser,
@@ -40,8 +40,7 @@ func insertPaste(key string, content string, secret string, ttl time.Duration) {
 }
 
 func getContent(key string) string {
-	content := db.HGet(ctx, key, "content").Val()
-	return content
+	return db.HGet(ctx, key, "content").Val()
 }
 
 func deleteContent(key string) {
