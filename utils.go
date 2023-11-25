@@ -7,7 +7,7 @@ import (
 	mathrand "math/rand"
 )
 
-func generateUrl() string {
+func GenerateUrl() string {
 	listChars := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	b := make([]rune, currentConfig.urlLength)
 	for i := range b {
@@ -17,7 +17,7 @@ func generateUrl() string {
 	return string(b)
 }
 
-func generateSecret() string {
+func GenerateSecret() string {
 	key := make([]byte, 32)
 	_, err := rand.Read(key)
 	if err != nil {
@@ -27,14 +27,10 @@ func generateSecret() string {
 	return hex.EncodeToString(key)
 }
 
-func urlExist(url string) bool {
-	exist := db.Exists(ctx, url).Val()
-	return exist == 1
+func UrlExist(url string) bool {
+	return db.Exists(ctx, url).Val() == 1
 }
 
-func verifySecret(url string, secret string) bool {
-	if secret == db.HGet(ctx, url, "secret").Val() {
-		return true
-	}
-	return false
+func VerifySecret(url string, secret string) bool {
+	return secret == db.HGet(ctx, url, "secret").Val()
 }
