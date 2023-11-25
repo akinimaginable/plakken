@@ -28,6 +28,13 @@ func generateSecret() string {
 }
 
 func urlExist(url string) bool {
-	exist := connectDB().Exists(ctx, url).Val()
+	exist := db.Exists(ctx, url).Val()
 	return exist == 1
+}
+
+func verifySecret(url string, secret string) bool {
+	if secret == db.HGet(ctx, url, "secret").Val() {
+		return true
+	}
+	return false
 }

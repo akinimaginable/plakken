@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/redis/go-redis/v9"
 	"html/template"
 	"io"
 	"log"
@@ -10,6 +11,7 @@ import (
 )
 
 var currentConfig config
+var db *redis.Client
 
 type pasteView struct {
 	Content string
@@ -19,7 +21,6 @@ type pasteView struct {
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	clearPath := strings.ReplaceAll(r.URL.Path, "/raw", "")
-	db := connectDB()
 	switch r.Method {
 	case "GET":
 		if path == "/" {
@@ -31,14 +32,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		} else {
 			if urlExist(clearPath) {
 				if strings.HasSuffix(path, "/raw") {
-					pasteContent := db.HGet(ctx, clearPath, "content").Val()
+					pasteContent := getContent(clearPath)
 					w.Header().Set("Content-Type", "text/plain")
 					_, err := io.WriteString(w, pasteContent)
 					if err != nil {
 						log.Println(err)
 					}
 				} else {
-					pasteContent := db.HGet(ctx, path, "content").Val()
+					pasteContent := getContent(path)
 					s := pasteView{Content: pasteContent, Key: strings.TrimPrefix(path, "/")}
 					t, err := template.ParseFiles("templates/paste.html")
 					if err != nil {
@@ -68,11 +69,8 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			urlItem := strings.Split(path, "/")
 			if urlExist("/" + urlItem[2]) {
 				secret := r.URL.Query().Get("secret")
-				if secret == db.HGet(ctx, "/"+urlItem[2], "secret").Val() {
-					err := db.Del(ctx, "/"+urlItem[2])
-					if err != nil {
-						log.Println(err)
-					}
+				if verifySecret("/"+urlItem[2], secret) {
+					deleteContent("/" + urlItem[2])
 					w.WriteHeader(http.StatusNoContent)
 				} else {
 					w.WriteHeader(http.StatusForbidden)
@@ -87,6 +85,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	db = connectDB()
 	currentConfig = getConfig()
 	listen := currentConfig.host + ":" + currentConfig.port
 	http.HandleFunc("/", handleRequest)
