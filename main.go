@@ -34,7 +34,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			if UrlExist(clearPath) {
 				if strings.HasSuffix(path, "/raw") {
 					pasteContent := getContent(clearPath)
-					w.Header().Set("Content-Type", "text/plain")
+					w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 					_, err := io.WriteString(w, pasteContent)
 					if err != nil {
 						log.Println(err)
