@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/joho/godotenv v1.5.1
-	github.com/redis/go-redis/v9 v9.2.1
+	github.com/redis/go-redis/v9 v9.4.0
 )
 
 require (
