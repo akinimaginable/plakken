@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 var currentConfig Config
@@ -60,7 +61,18 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			secret := GenerateSecret()
 			url := "/" + GenerateUrl()
 			content := r.FormValue("content")
-			insertPaste(url, content, secret, -1)
+			rawExpiration := r.FormValue("exp")
+			expiration, err := ParseExpiration(rawExpiration)
+			if err != nil {
+				log.Println(err)
+			} else if expiration == 0 {
+				insertPaste(url, content, secret, -1)
+			} else if expiration == -1 {
+				w.WriteHeader(http.StatusBadRequest)
+			} else {
+				insertPaste(url, content, secret, time.Duration(expiration*int(time.Second)))
+			}
+
 			http.Redirect(w, r, url, http.StatusSeeOther)
 		} else {
 			w.WriteHeader(http.StatusMethodNotAllowed)
