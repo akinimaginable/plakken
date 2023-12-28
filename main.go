@@ -80,11 +80,8 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	case "DELETE":
 		if UrlExist(path) {
 			secret := r.URL.Query().Get("secret")
-			if secret == db.HGet(ctx, path, "secret").Val() {
-				err := db.Del(ctx, path)
-				if err != nil {
-					log.Println(err)
-				}
+			if VerifySecret(path, secret) {
+				DeleteContent(path)
 				w.WriteHeader(http.StatusNoContent)
 			} else {
 				w.WriteHeader(http.StatusForbidden)
