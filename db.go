@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
-	"github.com/redis/go-redis/v9"
 	"log"
 	"time"
+
+	"github.com/redis/go-redis/v9"
 )
 
 var ctx = context.Background()
@@ -43,9 +44,6 @@ func getContent(key string) string {
 	return db.HGet(ctx, key, "content").Val()
 }
 
-func deleteContent(key string) {
-	err := db.Del(ctx, key)
-	if err != nil {
-		log.Println(err)
-	}
+func DeleteContent(key string) {
+	db.Del(ctx, key)
 }
