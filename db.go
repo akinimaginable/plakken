@@ -35,7 +35,7 @@ func insertPaste(key string, content string, secret string, ttl time.Duration) {
 	}
 	err = db.HSet(ctx, key, "secret", hash.secret)
 	if ttl > -1 {
-		db.Do(ctx, key, ttl)
+		db.Expire(ctx, key, ttl)
 	}
 }
 
