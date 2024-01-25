@@ -7,9 +7,8 @@
           name="description">
     <meta content="Plakken" name="author">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>New plak • Plakken</title>
+    <title>New plak • Plakken</title><script async src="/static/app.js"></script>
     <link href="/static/style.css" rel="stylesheet">
-    <script async src="/static/app.js"></script>
 </head>
 <body>
 <form method="post">
@@ -19,43 +18,46 @@
     </div>
     <div>
         <label for="content"></label>
-        <textarea autofocus id="content" name="content" placeholder="Your paste here"></textarea>
+        <textarea autofocus id="content" name="content" placeholder="Type your paste here"></textarea>
         <nav>
             <ul>
                 <li>
-                    <label for="password">Password?</label>
-                    <input id="password" type="text">
+                    <label for="password">
+                        <input id="password" placeholder="Password" type="text">
+                    </label>
                 </li>
-                <li><label for="exp">Expiration?</label>
-                    <input id="exp" name="exp" type="text" placeholder="vide, 0 ou 1d1h1m1s"></li>
                 <li>
-                    <label for="type">Type</label>
-                    <select id="type" name="type">
-                        <option value="auto">Auto Detect</option>
-                        <option value="c">C</option>
-                        <option value="cpp">C++</option>
-                        <option value="csharp">C#</option>
-                        <option value="css">CSS</option>
-                        <option value="go">Go</option>
-                        <option value="java">Java</option>
-                        <option value="js">Javascript</option>
-                        <option value="html">HTML</option>
-                        <option selected value="plain">Plaintext</option>
-                        <option value="python">Python</option>
-                        <option value="rb">Ruby</option>
-                        <option value="rs">Rust</option>
-                        <option value="sh">Shell</option>
-                        <option value="sql">SQL</option>
-                        <option value="ts">Typescript</option>
-                        <option value="xml">XML</option>
-                        <option value="yml">YAML</option>
-                    </select>
+                    <label for="exp">
+                        <input id="exp" name="exp" placeholder="Expiration (1d1h1m1s)" type="text">
+                    </label>
+                </li>
+                <li>
+                    <label for="type">
+                        <select id="type" name="type">
+                            <option value="c">C</option>
+                            <option value="cpp">C++</option>
+                            <option value="csharp">C#</option>
+                            <option value="css">CSS</option>
+                            <option value="go">Go</option>
+                            <option value="java">Java</option>
+                            <option value="js">Javascript</option>
+                            <option value="html">HTML</option>
+                            <option selected value="plain">Plaintext</option>
+                            <option value="python">Python</option>
+                            <option value="rb">Ruby</option>
+                            <option value="rs">Rust</option>
+                            <option value="sh">Shell</option>
+                            <option value="sql">SQL</option>
+                            <option value="ts">Typescript</option>
+                            <option value="xml">XML</option>
+                            <option value="yml">YAML</option>
+                        </select>
+                    </label>
                 </li>
             </ul>
             <button title="Save plak" type="submit">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <polyline points="9 11 12 14 22 4"></polyline>
-                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"></path>
                 </svg>
             </button>
         </nav>

@@ -1,8 +1,9 @@
 :root {
     --accent: #be0560;
-    --background: #141414;
+    --background: #121212;
     --border: #333;
-    --text: #e9e9e9;
+    --text: #e6e6e6;
+    --placeholder: #666;
 }
 
 body {
@@ -17,6 +18,32 @@ form {
     flex-flow: row wrap;
 }
 
+#lines {
+    color: var(--placeholder);
+    font: 400 14px/1.6 "JetBrains Mono", monospace;
+    height: calc(100vh - 29px);
+    overflow-y: hidden;
+    padding: 8px 0;
+    text-align: center;
+    user-select: none;
+    width: 26px;
+}
+
+input, select {
+    background-color: var(--background);
+    border: 2px solid var(--border);
+    border-radius: 2px;
+    color: var(--text);
+    font-size: 13px;
+    outline: none;
+    padding: 6px 8px;
+    transition: border .15s ease;
+}
+
+input:hover, select:hover {
+    border-color: var(--text);
+}
+
 button, textarea {
     background-color: inherit;
     border: none;
@@ -24,36 +51,20 @@ button, textarea {
     resize: none;
 }
 
-#lines {
-    color: #999;
-    font: 400 14px/1.6 "JetBrains Mono", monospace;
-    height: calc(100vh - 3rem);
-    overflow-y: hidden;
-    padding: 10px 0;
-    text-align: center;
-    user-select: none;
-    width: 26px;
-}
-
 #content {
     color: var(--text);
     font: 400 14px/1.6 "JetBrains Mono", monospace;
-    height: calc(100vh - 3rem);
-    padding: 10px 10px 10px 6px;
-    width: calc(100vw - 42px);
-}
-
-pre {
-    margin: 15px;
+    height: calc(100vh - 29px);
+    padding: 8px;
+    width: calc(100vw - 45px);
 }
 
 nav {
-    align-items: end;
-    bottom: 1rem;
+    top: 1rem;
     display: flex;
     flex-flow: row wrap;
     position: absolute;
-    right: 1rem;
+    right: 12px;
 }
 
 ul {
@@ -65,33 +76,12 @@ ul {
     padding: 0 1.9rem;
 }
 
-label {
-    display: block;
-}
-
-input, select {
-    background-color: var(--background);
-    border: 2px solid var(--border);
-    border-radius: 2px;
-    color: var(--text);
-    font-size: 15px;
-    outline: none;
-    padding: 6px 8px;
-    transition: border .15s ease;
-}
-
-input:hover, select:hover {
-    border-color: var(--text);
-}
-
 svg {
-    fill: none;
-    height: 26px;
-    stroke: var(--text);
-    stroke-width: 2;
-    stroke-linecap: round;
+    cursor: pointer;
+    height: 24px;
+    fill: var(--text);
     transition: .15s ease;
-    width: 26px;
+    width: 24px;
 }
 
 svg:hover {
@@ -100,10 +90,6 @@ svg:hover {
 
 input:focus-visible, select:focus-visible {
     border: 2px solid var(--text);
-}
-
-button:focus-visible {
-    outline: none;
 }
 
 ::selection {
