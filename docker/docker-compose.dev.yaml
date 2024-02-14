@@ -1,0 +1,31 @@
+version: "3"
+
+networks:
+  plakken:
+    external: false
+
+services:
+  server:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    restart: always
+    container_name: plakken
+    networks:
+      - plakken
+    ports:
+      - "3000:3000"
+    environment:
+      - PLAKKEN_REDIS_ADDRESS=redis:6379
+      - POSTGRES_PASSWORD=gitea
+      - PLAKKEN_REDIS_DB=0
+      - PLAKKEN_URL_LENGTH=5
+    depends_on:
+      - redis
+  redis:
+    image: redis:7-alpine
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+    networks:
+      - plakken
