@@ -2,6 +2,7 @@ package plak
 
 import (
 	"context"
+	"embed"
 	"io"
 	"log"
 	"net/http"
@@ -19,6 +20,7 @@ var ctx = context.Background()
 type WebConfig struct {
 	DB        *redis.Client
 	UrlLength uint8
+	Templates embed.FS
 }
 
 // Plak "Object" for plak
@@ -76,8 +78,9 @@ func (config WebConfig) View(w http.ResponseWriter, r *http.Request) {
 				log.Println(err)
 			}
 		} else {
-			t, err := template.ParseFiles("templates/paste.html")
+			t, err := template.ParseFS(config.Templates, "templates/paste.html")
 			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
 				log.Println(err)
 			}
 			err = t.Execute(w, plak)
