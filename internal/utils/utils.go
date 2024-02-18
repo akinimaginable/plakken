@@ -33,10 +33,7 @@ func GenerateSecret() string {
 
 // CheckCharRedundant  verify is a character is redundant in a string
 func CheckCharRedundant(source string, char string) bool { // Verify if a char is redundant
-	if strings.Count(source, char) > 1 {
-		return true
-	}
-	return false
+	return strings.Count(source, char) > 1
 }
 
 func parseIntBeforeSeparator(source *string, sep string) (int, error) { // return 0 & error if error, only accept positive number
