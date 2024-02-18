@@ -1,0 +1,24 @@
+steps:
+  - name: Build
+    image: golang:1.22
+    commands:
+      - go mod download
+      - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o plakken-linux-amd64 # Enable static binary, target Linux, remove debug information and strip binary
+      - CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags "-w -s" -o plakken-linux-arm64
+      - CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -ldflags "-w -s" -o plakken-linux-arm
+      - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o plakken-windows-amd64.exe
+      - CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags "-w -s" -o plakken-windows-arm64.exe
+      - CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -ldflags "-w -s" -o plakken-windows-arm.exe
+    when:
+      event: tag
+  - name: Release
+    image: woodpeckerci/plugin-gitea-release
+    settings:
+      base_url: https://git.gnous.eu
+      files:
+        - "plakken*"
+      api_key:
+        from_secret: release_token
+      target: main
+    when:
+      event: tag
