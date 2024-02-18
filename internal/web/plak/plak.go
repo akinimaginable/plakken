@@ -36,18 +36,36 @@ func (config WebConfig) Create(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("content")
 	if content == "" {
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
 	dbConf := database.DBConfig{
 		DB: config.DB,
 	}
 
+	filename := r.FormValue("filename")
+	var key string
+	if len(filename) == 0 {
+		key = utils.GenerateUrl(config.UrlLength)
+	} else {
+		if !utils.ValidKey(filename) {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		if dbConf.UrlExist(filename) {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		key = filename
+	}
+
 	secret := utils.GenerateSecret()
-	key := utils.GenerateUrl(config.UrlLength)
 	rawExpiration := r.FormValue("exp")
+
 	expiration, err := utils.ParseExpiration(rawExpiration)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	} else if expiration == 0 {
 		dbConf.InsertPaste(key, content, secret, -1)
 	} else {

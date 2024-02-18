@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"log"
 	mathrand "math/rand/v2"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -98,4 +99,14 @@ func ParseExpiration(source string) (int, error) {
 	}
 
 	return expiration, nil
+}
+
+// ValidKey Verify if a key is valid (only letter, number, - and _)
+func ValidKey(key string) bool {
+	result, err := regexp.MatchString("^[a-zA-Z0-9_.-]*$", key)
+	if err != nil {
+		return false
+	}
+	log.Println(key, result)
+	return result
 }
