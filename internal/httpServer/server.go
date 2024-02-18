@@ -17,7 +17,7 @@ type ServerConfig struct {
 }
 
 // Configure HTTP router
-func (config ServerConfig) router(_ http.ResponseWriter, _ *http.Request) {
+func (config ServerConfig) router() {
 	WebConfig := plak.WebConfig{
 		DB:        config.DB,
 		UrlLength: config.UrlLength,
@@ -45,7 +45,7 @@ func Config(listenAddress string) *http.Server {
 func (config ServerConfig) Server() {
 	log.Println("Listening on " + config.HTTPServer.Addr)
 
-	http.HandleFunc("/", config.router)
+	config.router()
 
 	log.Fatal(config.HTTPServer.ListenAndServe())
 }
