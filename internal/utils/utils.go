@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"log"
-	mathrand "math/rand"
+	mathrand "math/rand/v2"
 	"strconv"
 	"strings"
 )
@@ -14,7 +14,7 @@ func GenerateUrl(length uint8) string {
 	listChars := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	b := make([]rune, length)
 	for i := range b {
-		b[i] = listChars[mathrand.Intn(len(listChars))]
+		b[i] = listChars[mathrand.IntN(len(listChars))]
 	}
 
 	return string(b)
