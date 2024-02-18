@@ -4,8 +4,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-
-	"github.com/joho/godotenv"
 )
 
 // InitConfig Structure for program initialisation
@@ -20,11 +18,6 @@ type InitConfig struct {
 
 // GetConfig Initialise configuration form .env
 func GetConfig() InitConfig {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
-
 	listenAddress := os.Getenv("PLAKKEN_LISTEN")
 	redisAddress := os.Getenv("PLAKKEN_REDIS_ADDRESS")
 	db := os.Getenv("PLAKKEN_REDIS_DB")

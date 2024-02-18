@@ -1,0 +1,36 @@
+version: "3"
+
+networks:
+  plakken:
+    external: false
+
+volumes:
+  redis:
+    driver: local
+
+services:
+  server:
+    image: git.gnous.eu/gnouseu/plakken:latest
+    restart: always
+    container_name: plakken
+    read_only: true
+    networks:
+      - plakken
+    ports:
+      - "3000:3000"
+    environment:
+      - PLAKKEN_REDIS_ADDRESS=redis:6379
+      - POSTGRES_PASSWORD=gitea
+      - PLAKKEN_REDIS_DB=0
+      - PLAKKEN_URL_LENGTH=5
+    depends_on:
+      - redis
+  redis:
+    image: redis:7-alpine
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+    networks:
+      - plakken
+    volumes:
+      - redis:/data
