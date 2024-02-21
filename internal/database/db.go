@@ -32,6 +32,15 @@ func ConnectDB(dbConfig *redis.Options) *redis.Client {
 	return localDb
 }
 
+// Ping test connection to Redis database
+func Ping(db *redis.Client) error {
+	status := db.Ping(ctx)
+	if status.String() != "ping: PONG" {
+		return &PingError{}
+	}
+	return nil
+}
+
 func (config DBConfig) InsertPaste(key string, content string, secret string, ttl time.Duration) {
 	type dbSchema struct {
 		content string
