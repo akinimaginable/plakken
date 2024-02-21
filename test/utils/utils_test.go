@@ -79,3 +79,21 @@ func TestParseExpirationInvalidRedundant(t *testing.T) { // test ParseExpiration
 		t.Fatal("Error in ParseExpirationFull, want : ", want, "got : ", got)
 	}
 }
+
+func TestValidKey(t *testing.T) { // test ValidKey with a valid key
+	got := utils.ValidKey("ab_a-C42")
+	want := true
+
+	if got != want {
+		t.Fatal("Error in ValidKey, want : ", want, "got : ", got)
+	}
+}
+
+func TestInValidKey(t *testing.T) { // test ValidKey with invalid key
+	got := utils.ValidKey("ab_?a-C42")
+	want := false
+
+	if got != want {
+		t.Fatal("Error in ValidKey, want : ", want, "got : ", got)
+	}
+}
