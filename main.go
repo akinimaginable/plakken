@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"log"
 
 	"git.gnous.eu/gnouseu/plakken/internal/config"
 	"git.gnous.eu/gnouseu/plakken/internal/database"
@@ -19,6 +20,10 @@ func main() {
 	initConfig := config.GetConfig()
 	dbConfig := database.InitDB(initConfig.RedisAddress, initConfig.RedisUser, initConfig.RedisPassword, initConfig.RedisDB)
 	db := database.ConnectDB(dbConfig)
+	err := database.Ping(db)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	serverConfig := httpServer.ServerConfig{
 		HTTPServer: httpServer.Config(initConfig.ListenAddress),
