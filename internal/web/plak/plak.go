@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"git.gnous.eu/gnouseu/plakken/internal/constant"
 	"git.gnous.eu/gnouseu/plakken/internal/database"
 	"git.gnous.eu/gnouseu/plakken/internal/utils"
 	"github.com/redis/go-redis/v9"
@@ -72,7 +73,41 @@ func (config WebConfig) Create(w http.ResponseWriter, r *http.Request) {
 		dbConf.InsertPaste(key, content, secret, time.Duration(expiration*int(time.Second)))
 	}
 
-	http.Redirect(w, r, key, http.StatusSeeOther)
+	http.Redirect(w, r, "/"+key, http.StatusSeeOther)
+}
+
+// CurlCreate Create plak with minimum param, ideal for curl. Force 7 day expiration
+func (config WebConfig) CurlCreate(w http.ResponseWriter, r *http.Request) {
+	if r.ContentLength == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	content, _ := io.ReadAll(r.Body)
+	err := r.Body.Close()
+	if err != nil {
+		log.Println(err)
+	}
+	key := utils.GenerateUrl(config.UrlLength)
+	secret := utils.GenerateSecret()
+	dbConf := database.DBConfig{
+		DB: config.DB,
+	}
+	dbConf.InsertPaste(key, string(content), secret, constant.ExpirationCurlCreate)
+
+	var baseURL string
+	if r.TLS == nil {
+		baseURL = "http://" + r.Host + "/" + key
+	} else {
+		baseURL = "https://" + r.Host + "/" + key
+	}
+
+	message := baseURL + "\n" + "Delete with : 'curl -X DELETE " + baseURL + "?secret\\=" + secret + "'" + "\n"
+
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	_, err = io.WriteString(w, message)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 // View for plak
@@ -130,8 +165,10 @@ func (config WebConfig) Delete(w http.ResponseWriter, r *http.Request) {
 				log.Println(err)
 			}
 			w.WriteHeader(http.StatusNoContent)
+			return
 		} else {
 			w.WriteHeader(http.StatusForbidden)
+			return
 		}
 	}
 	w.WriteHeader(http.StatusNotFound)

@@ -18,7 +18,7 @@ type ServerConfig struct {
 	Templates  embed.FS
 }
 
-func (config ServerConfig) home(w http.ResponseWriter, r *http.Request) {
+func (config ServerConfig) home(w http.ResponseWriter, _ *http.Request) {
 	index, err := config.Static.ReadFile("static/index.html")
 	if err != nil {
 		log.Println(err)
@@ -41,7 +41,8 @@ func (config ServerConfig) router() {
 	http.HandleFunc("GET /{$}", config.home)
 	http.Handle("GET /static/{file}", http.FileServer(staticFiles))
 	http.HandleFunc("GET /{key}/{settings...}", WebConfig.View)
-	http.HandleFunc("POST /{$}", WebConfig.Create)
+	http.HandleFunc("POST /{$}", WebConfig.CurlCreate)
+	http.HandleFunc("POST /create/{$}", WebConfig.Create)
 	http.HandleFunc("DELETE /{key}", WebConfig.Delete)
 }
 
