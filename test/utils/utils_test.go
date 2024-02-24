@@ -80,6 +80,14 @@ func TestParseExpirationInvalidRedundant(t *testing.T) { // test ParseExpiration
 	}
 }
 
+func TestParseExpirationInvalidTooHigh(t *testing.T) { // test ParseExpirationFull with all valid separator
+	_, got := utils.ParseExpiration("2d1h3m130s")
+	want := &utils.ParseExpirationError{}
+	if !errors.As(got, &want) {
+		t.Fatal("Error in ParseExpirationFull, want : ", want, "got : ", got)
+	}
+}
+
 func TestValidKey(t *testing.T) { // test ValidKey with a valid key
 	got := utils.ValidKey("ab_a-C42")
 	want := true
