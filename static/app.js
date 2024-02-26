@@ -11,7 +11,7 @@ function updateLn() {
 }
 
 function updateTitle() {
-  document.title = filenameSelector.value == '' ? 'New paste' : ` *${filenameSelector.value} - Plakken`;
+  document.title = filenameSelector.value == '' ? 'New paste' : ` ${filenameSelector.value} (Unsaved) - Plakken`;
 }
 
 function getRecentPlaksFromStorage() {

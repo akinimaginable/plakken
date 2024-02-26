@@ -21,7 +21,7 @@ body {
 
 #line-numbers,
 #content {
-  font: 400 15px/1.6 "JetBrains Mono", monospace;
+  font: 400 14px/1.6 "JetBrains Mono", monospace;
 }
 
 #line-numbers {
@@ -83,6 +83,7 @@ select {
 
 select {
   padding: 8px 10px;
+  width: fit-content;
 }
 
 select:focus {
@@ -108,4 +109,3 @@ textarea {
   outline: none;
   resize: none;
 }
-
