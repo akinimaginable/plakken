@@ -1,7 +1,7 @@
 package database
 
-type PingError struct{}
+type pingError struct{}
 
-func (m *PingError) Error() string {
+func (m *pingError) Error() string {
 	return "Connection to redis not work"
 }

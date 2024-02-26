@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"git.gnous.eu/gnouseu/plakken/internal/secret"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -36,7 +37,7 @@ func ConnectDB(dbConfig *redis.Options) *redis.Client {
 func Ping(db *redis.Client) error {
 	status := db.Ping(ctx)
 	if status.String() != "ping: PONG" {
-		return &PingError{}
+		return &pingError{}
 	}
 	return nil
 }
@@ -68,6 +69,13 @@ func (config DBConfig) UrlExist(url string) bool {
 	return config.DB.Exists(ctx, url).Val() == 1
 }
 
-func (config DBConfig) VerifySecret(url string, secret string) bool {
-	return secret == config.DB.HGet(ctx, url, "secret").Val()
+func (config DBConfig) VerifySecret(url string, token string) (bool, error) {
+	storedHash := config.DB.HGet(ctx, url, "secret").Val()
+
+	result, err := secret.VerifyPassword(token, storedHash)
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
 }

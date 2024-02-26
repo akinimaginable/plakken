@@ -1,10 +1,18 @@
 package plak
 
-type DeletePlakError struct {
-	Name string
-	Err  error
+type deletePlakError struct {
+	name string
+	err  error
 }
 
-func (m *DeletePlakError) Error() string {
-	return "Cannot delete: " + m.Name + " : " + m.Err.Error()
+func (m *deletePlakError) Error() string {
+	return "Cannot delete: " + m.name + " : " + m.err.Error()
+}
+
+type createError struct {
+	message string
+}
+
+func (m *createError) Error() string {
+	return "create: cannot create plak: " + m.message
 }

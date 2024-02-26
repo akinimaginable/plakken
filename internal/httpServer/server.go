@@ -42,8 +42,8 @@ func (config ServerConfig) router() {
 	http.Handle("GET /static/{file}", http.FileServer(staticFiles))
 	http.HandleFunc("GET /{key}/{settings...}", WebConfig.View)
 	http.HandleFunc("POST /{$}", WebConfig.CurlCreate)
-	http.HandleFunc("POST /create/{$}", WebConfig.Create)
-	http.HandleFunc("DELETE /{key}", WebConfig.Delete)
+	http.HandleFunc("POST /create/{$}", WebConfig.PostCreate)
+	http.HandleFunc("DELETE /{key}", WebConfig.DeleteRequest)
 }
 
 // Config Configure HTTP server

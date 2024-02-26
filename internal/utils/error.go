@@ -1,17 +1,17 @@
 package utils
 
-type ParseIntBeforeSeparatorError struct {
-	Message string
+type parseIntBeforeSeparatorError struct {
+	message string
 }
 
-func (m *ParseIntBeforeSeparatorError) Error() string {
-	return "parseIntBeforeSeparator: " + m.Message
+func (m *parseIntBeforeSeparatorError) Error() string {
+	return "parseIntBeforeSeparator: " + m.message
 }
 
 type ParseExpirationError struct {
-	Message string
+	message string
 }
 
 func (m *ParseExpirationError) Error() string {
-	return "parseIntBeforeSeparator: " + m.Message
+	return "parseIntBeforeSeparator: " + m.message
 }
