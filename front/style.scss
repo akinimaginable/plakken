@@ -57,23 +57,26 @@ body {
   }
 }
 
+button,
 input,
 select {
   background-color: $background;
   border: 2px solid $border;
   color: $text;
   font: 500 14px/2 "Inter", "system-ui", sans-serif;
+  max-width: 145px;
   outline: none;
   padding: 3px 10px;
-  width: 150px;
-  transition: .15s ease;
+  transition: border .15s ease;
+  width: min-content;
+  
 
   &::placeholder {
     color: $placeholder;
   }
 
   &:hover {
-    border-color: #555;
+    border-color: #777;
   }
 
   &:focus-visible {
@@ -90,7 +93,7 @@ select:focus {
   background-color: $background;
   transition: none;
 }
-
+²
 option {
   background-color: $background;
   color: $text;
@@ -101,7 +104,6 @@ option {
   }
 }
 
-button,
 textarea {
   background-color: inherit;
   border: none;

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono&display=swap");
 section#recent-plaks {
   bottom: 1rem;
@@ -128,25 +129,30 @@ body {
   width: 24px;
 }
 
+button,
 input,
 select {
   background-color: #0f0f0f;
   border: 2px solid #363636;
   color: #e5e5e7;
   font: 500 14px/2 "Inter", "system-ui", sans-serif;
+  max-width: 145px;
   outline: none;
   padding: 3px 10px;
-  width: 150px;
-  transition: 0.15s ease;
+  transition: border 0.15s ease;
+  width: min-content;
 }
+button::placeholder,
 input::placeholder,
 select::placeholder {
   color: #888;
 }
+button:hover,
 input:hover,
 select:hover {
-  border-color: #555;
+  border-color: #777;
 }
+button:focus-visible,
 input:focus-visible,
 select:focus-visible {
   border: 2px solid #bbb;
@@ -162,16 +168,15 @@ select:focus {
   transition: none;
 }
 
-option {
+² option {
   background-color: #0f0f0f;
   color: #e5e5e7;
 }
-option:focus {
+² option:focus {
   background-color: #d30f45;
   color: #0f0f0f;
 }
 
-button,
 textarea {
   background-color: inherit;
   border: none;
