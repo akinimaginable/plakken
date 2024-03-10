@@ -1,24 +1,29 @@
 steps:
-  - name: Build
+  - name: Release
     image: golang:1.22
     commands:
-      - go mod download
-      - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o plakken-linux-amd64 # Enable static binary, target Linux, remove debug information and strip binary
-      - CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags "-w -s" -o plakken-linux-arm64
-      - CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -ldflags "-w -s" -o plakken-linux-arm
-      - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o plakken-windows-amd64.exe
-      - CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags "-w -s" -o plakken-windows-arm64.exe
-      - CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -ldflags "-w -s" -o plakken-windows-arm.exe
+      - go install github.com/goreleaser/goreleaser@latest
+      - goreleaser release
+    secrets: [ gitea_token ]
     when:
       event: tag
-  - name: Release
-    image: woodpeckerci/plugin-gitea-release
+      repo: gnouseu/plakken
+    depends_on: []
+  - name: publish_image_tag
+    image: woodpeckerci/plugin-docker-buildx
     settings:
-      base_url: https://git.gnous.eu
-      files:
-        - "plakken*"
-      api_key:
-        from_secret: release_token
-      target: main
+      repo: git.gnous.eu/${CI_REPO_OWNER}/plakken
+      dockerfile: deployment/docker/Dockerfile
+      platforms: linux/amd64,linux/arm64/v8
+      registry: https://git.gnous.eu
+      tags:
+        - ${CI_COMMIT_TAG##v} # Remove v from tag
+        - stable
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
     when:
       event: tag
+      repo: gnouseu/plakken
+    depends_on: []

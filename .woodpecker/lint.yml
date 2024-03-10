@@ -8,4 +8,4 @@ steps:
       - event: pull_request
         repo: gnouseu/plakken
       - event: push
-        branch: main
+        branch: ${CI_REPO_DEFAULT_BRANCH}

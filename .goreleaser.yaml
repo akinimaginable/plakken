@@ -1,0 +1,69 @@
+gitea_urls:
+  api: https://git.gnous.eu/api/v1
+  download: https://git.gnous.eu
+  skip_tls_verify: false
+
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+
+builds:
+  -
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    binary: plakken
+    id: plakken
+
+archives:
+  - format: tar.gz
+    format_overrides:
+      -
+        goos: windows
+        format: zip
+
+nfpms:
+  -
+    id: plakken
+    package_name: plakken
+    file_name_template: "{{ .ConventionalFileName }}"
+    vendor: GnousEU
+    homepage: https://git.gnous.eu/plakken/
+    maintainer: GnousEU <contact@gnous.eu>
+    description: A light paste server
+    license: AGPLv3
+    formats:
+      - deb
+      - rpm
+      - archlinux
+    umask: 0o002
+    provides:
+      - plakken
+    suggests:
+      - redis
+    contents:
+      - src: .env
+        dst: /etc/plakken/env
+      - src: plakken.service
+        dst: /usr/lib/systemd/system/plakken.service
+    scripts:
+      preinstall: "deployment/goreleaser/preinstall.sh"
+      preremove: "deployment/goreleaser/preremove.sh"
+      postremove: "deployment/goreleaser/postremove.sh"
+
+checksum:
+  algorithm: sha256
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
