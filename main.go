@@ -6,7 +6,7 @@ import (
 
 	"git.gnous.eu/gnouseu/plakken/internal/config"
 	"git.gnous.eu/gnouseu/plakken/internal/database"
-	"git.gnous.eu/gnouseu/plakken/internal/httpServer"
+	"git.gnous.eu/gnouseu/plakken/internal/httpserver"
 )
 
 var (
@@ -25,9 +25,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	serverConfig := httpServer.ServerConfig{
-		HTTPServer: httpServer.Config(initConfig.ListenAddress),
-		UrlLength:  initConfig.UrlLength,
+	serverConfig := httpserver.ServerConfig{
+		HTTPServer: httpserver.Config(initConfig.ListenAddress),
+		URLLength:  initConfig.URLLength,
 		DB:         db,
 		Static:     static,
 		Templates:  templates,

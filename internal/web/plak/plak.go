@@ -3,6 +3,7 @@ package plak
 import (
 	"context"
 	"embed"
+	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -13,19 +14,17 @@ import (
 	"git.gnous.eu/gnouseu/plakken/internal/secret"
 	"git.gnous.eu/gnouseu/plakken/internal/utils"
 	"github.com/redis/go-redis/v9"
-
-	"html/template"
 )
 
-var ctx = context.Background()
+var ctx = context.Background() //nolint:gochecknoglobals
 
 type WebConfig struct {
 	DB        *redis.Client
-	UrlLength uint8
+	URLLength uint8
 	Templates embed.FS
 }
 
-// plak "Object" for plak
+// plak "Object" for plak.
 type plak struct {
 	Key        string
 	Content    string
@@ -33,7 +32,7 @@ type plak struct {
 	DB         *redis.Client
 }
 
-// create a plak
+// create a plak.
 func (plak plak) create() (string, error) {
 	dbConf := database.DBConfig{
 		DB: plak.DB,
@@ -44,7 +43,7 @@ func (plak plak) create() (string, error) {
 		return "", err
 	}
 
-	if dbConf.UrlExist(plak.Key) {
+	if dbConf.URLExist(plak.Key) {
 		return "", &createError{message: "key already exist"}
 	}
 
@@ -59,21 +58,23 @@ func (plak plak) create() (string, error) {
 	return token, nil
 }
 
-// PostCreate manage POST request for create plak
+// PostCreate manage POST request for create plak.
 func (config WebConfig) PostCreate(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("content")
 	if content == "" {
 		w.WriteHeader(http.StatusBadRequest)
+
 		return
 	}
 
 	filename := r.FormValue("filename")
 	var key string
 	if len(filename) == 0 {
-		key = utils.GenerateUrl(config.UrlLength)
+		key = utils.GenerateURL(config.URLLength)
 	} else {
 		if !utils.ValidKey(filename) {
 			w.WriteHeader(http.StatusBadRequest)
+
 			return
 		}
 		key = filename
@@ -90,6 +91,7 @@ func (config WebConfig) PostCreate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
+
 		return
 	}
 
@@ -103,16 +105,18 @@ func (config WebConfig) PostCreate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
+
 		return
 	}
 
 	http.Redirect(w, r, "/"+key, http.StatusSeeOther)
 }
 
-// CurlCreate PostCreate plak with minimum param, ideal for curl. Force 7 day expiration
+// CurlCreate PostCreate plak with minimum param, ideal for curl. Force 7 day expiration.
 func (config WebConfig) CurlCreate(w http.ResponseWriter, r *http.Request) {
 	if r.ContentLength == 0 {
 		w.WriteHeader(http.StatusBadRequest)
+
 		return
 	}
 
@@ -122,7 +126,7 @@ func (config WebConfig) CurlCreate(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	key := utils.GenerateUrl(config.UrlLength)
+	key := utils.GenerateURL(config.URLLength)
 
 	plak := plak{
 		Key:        key,
@@ -135,6 +139,7 @@ func (config WebConfig) CurlCreate(w http.ResponseWriter, r *http.Request) {
 	token, err = plak.create()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+
 		return
 	}
 
@@ -154,7 +159,7 @@ func (config WebConfig) CurlCreate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// View for plak
+// View for plak.
 func (config WebConfig) View(w http.ResponseWriter, r *http.Request) {
 	dbConf := database.DBConfig{
 		DB: config.DB,
@@ -162,7 +167,8 @@ func (config WebConfig) View(w http.ResponseWriter, r *http.Request) {
 	var currentPlak plak
 	key := r.PathValue("key")
 
-	if dbConf.UrlExist(key) {
+	//nolint:nestif
+	if dbConf.URLExist(key) {
 		currentPlak = plak{
 			Key: key,
 			DB:  config.DB,
@@ -179,12 +185,14 @@ func (config WebConfig) View(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				log.Println(err)
+
 				return
 			}
 			err = t.Execute(w, currentPlak)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				log.Println(err)
+
 				return
 			}
 		}
@@ -193,7 +201,7 @@ func (config WebConfig) View(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// DeleteRequest manage plak deletion endpoint
+// DeleteRequest manage plak deletion endpoint.
 func (config WebConfig) DeleteRequest(w http.ResponseWriter, r *http.Request) {
 	dbConf := database.DBConfig{
 		DB: config.DB,
@@ -201,7 +209,8 @@ func (config WebConfig) DeleteRequest(w http.ResponseWriter, r *http.Request) {
 	key := r.PathValue("key")
 	var valid bool
 
-	if dbConf.UrlExist(key) {
+	//nolint:nestif
+	if dbConf.URLExist(key) {
 		var err error
 		token := r.URL.Query().Get("secret")
 
@@ -209,7 +218,6 @@ func (config WebConfig) DeleteRequest(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			log.Println(err)
-			return
 		}
 
 		if valid {
@@ -223,29 +231,31 @@ func (config WebConfig) DeleteRequest(w http.ResponseWriter, r *http.Request) {
 			}
 
 			w.WriteHeader(http.StatusNoContent)
-			return
 		} else {
 			w.WriteHeader(http.StatusForbidden)
-			return
 		}
+
+		return
 	}
 
 	w.WriteHeader(http.StatusNotFound)
 }
 
-// delete DeleteRequest plak from database
+// delete DeleteRequest plak from database.
 func (plak plak) delete() error {
 	err := plak.DB.Del(ctx, plak.Key).Err()
 	if err != nil {
 		log.Println(err)
+
 		return &deletePlakError{name: plak.Key, err: err}
 	}
 
 	return nil
 }
 
-// getContent get plak content
+// getContent get plak content.
 func (plak plak) getContent() plak {
 	plak.Content = plak.DB.HGet(ctx, plak.Key, "content").Val()
+
 	return plak
 }

@@ -13,9 +13,9 @@ type DBConfig struct {
 	DB *redis.Client
 }
 
-var ctx = context.Background()
+var ctx = context.Background() //nolint:gochecknoglobals
 
-// InitDB initialise redis connection settings
+// InitDB initialise redis connection settings.
 func InitDB(addr string, user string, password string, db int) *redis.Options {
 	DBConfig := &redis.Options{
 		Addr:     addr,
@@ -27,18 +27,20 @@ func InitDB(addr string, user string, password string, db int) *redis.Options {
 	return DBConfig
 }
 
-// ConnectDB make new database connection
+// ConnectDB make new database connection.
 func ConnectDB(dbConfig *redis.Options) *redis.Client {
-	localDb := redis.NewClient(dbConfig)
-	return localDb
+	localDB := redis.NewClient(dbConfig)
+
+	return localDB
 }
 
-// Ping test connection to Redis database
+// Ping test connection to Redis database.
 func Ping(db *redis.Client) error {
 	status := db.Ping(ctx)
 	if status.String() != "ping: PONG" {
 		return &pingError{}
 	}
+
 	return nil
 }
 
@@ -65,7 +67,7 @@ func (config DBConfig) InsertPaste(key string, content string, secret string, tt
 	}
 }
 
-func (config DBConfig) UrlExist(url string) bool {
+func (config DBConfig) URLExist(url string) bool {
 	return config.DB.Exists(ctx, url).Val() == 1
 }
 

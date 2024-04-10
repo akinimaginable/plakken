@@ -1,4 +1,4 @@
-package httpServer
+package httpserver
 
 import (
 	"embed"
@@ -12,7 +12,7 @@ import (
 
 type ServerConfig struct {
 	HTTPServer *http.Server
-	UrlLength  uint8
+	URLLength  uint8
 	DB         *redis.Client
 	Static     embed.FS
 	Templates  embed.FS
@@ -29,11 +29,11 @@ func (config ServerConfig) home(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
-// Configure HTTP router
+// Configure HTTP router.
 func (config ServerConfig) router() {
 	WebConfig := plak.WebConfig{
 		DB:        config.DB,
-		UrlLength: config.UrlLength,
+		URLLength: config.URLLength,
 		Templates: config.Templates,
 	}
 	staticFiles := http.FS(config.Static)
@@ -46,7 +46,7 @@ func (config ServerConfig) router() {
 	http.HandleFunc("DELETE /{key}", WebConfig.DeleteRequest)
 }
 
-// Config Configure HTTP server
+// Config Configure HTTP server.
 func Config(listenAddress string) *http.Server {
 	server := &http.Server{
 		Addr:         listenAddress,
@@ -57,7 +57,7 @@ func Config(listenAddress string) *http.Server {
 	return server
 }
 
-// Server Start HTTP server
+// Server Start HTTP server.
 func (config ServerConfig) Server() {
 	log.Println("Listening on " + config.HTTPServer.Addr)
 

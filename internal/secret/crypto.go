@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"strconv"
 	"strings"
@@ -18,7 +19,7 @@ type argon2idHash struct {
 	hash []byte
 }
 
-// Argon2id config
+// Argon2id config.
 type config struct {
 	saltLength uint8
 	memory     uint32
@@ -27,7 +28,7 @@ type config struct {
 	iterations uint32
 }
 
-// generateSecret for password hashing or token generation
+// generateSecret for password hashing or token generation.
 func generateSecret(length uint8) ([]byte, error) {
 	secret := make([]byte, length)
 
@@ -39,26 +40,26 @@ func generateSecret(length uint8) ([]byte, error) {
 	return secret, err
 }
 
-// GenerateToken generate hexadecimal token
+// GenerateToken generate hexadecimal token.
 func GenerateToken() (string, error) {
 	secret, err := generateSecret(constant.TokenLength)
 	if err != nil {
 		return "", err
 	}
 
-	token := fmt.Sprintf("%x", secret)
+	token := hex.EncodeToString(secret)
 
 	return token, nil
 }
 
-// generateArgon2ID Generate an argon2id hash from source string and specified salt
+// generateArgon2ID Generate an argon2id hash from source string and specified salt.
 func (config config) generateArgon2ID(source string, salt []byte) []byte {
 	hash := argon2.IDKey([]byte(source), salt, config.iterations, config.memory, config.threads, config.keyLength)
 
 	return hash
 }
 
-// Password hash a source string with argon2id, return properly encoded hash
+// Password hash a source string with argon2id, return properly encoded hash.
 func Password(password string) (string, error) {
 	config := config{
 		saltLength: constant.ArgonSaltSize,
@@ -95,10 +96,10 @@ func VerifyPassword(password string, hash string) (bool, error) {
 	return bytes.Equal(result, argon2Hash.hash), nil
 }
 
-// parseHash parse existing encoded argon2id string
+// parseHash parse existing encoded argon2id string.
 func parseHash(source string) (argon2idHash, config, error) {
 	separateItem := strings.Split(source, "$")
-	if len(separateItem) != 6 {
+	if len(separateItem) != 6 { //nolint:gomnd
 		return argon2idHash{}, config{}, &parseError{message: "Hash format is not valid"}
 	}
 
@@ -107,7 +108,7 @@ func parseHash(source string) (argon2idHash, config, error) {
 	}
 
 	separateParam := strings.Split(separateItem[3], ",")
-	if len(separateParam) != 3 {
+	if len(separateParam) != 3 { //nolint:gomnd
 		return argon2idHash{}, config{}, &parseError{message: "Hash config is not valid"}
 	}
 
@@ -126,22 +127,35 @@ func parseHash(source string) (argon2idHash, config, error) {
 	keyLength := uint32(len(hash))
 
 	var memory int
-	memory, err = strconv.Atoi(strings.Replace(separateParam[0], "m=", "", -1))
+	memory, err = strconv.Atoi(strings.ReplaceAll(separateParam[0], "m=", ""))
 	if err != nil {
 		return argon2idHash{}, config{}, err
 	}
 
 	var iterations int
-	iterations, err = strconv.Atoi(strings.Replace(separateParam[1], "t=", "", -1))
+	iterations, err = strconv.Atoi(strings.ReplaceAll(separateParam[1], "t=", ""))
 	if err != nil {
 		return argon2idHash{}, config{}, err
 	}
 
 	var threads int
-	threads, err = strconv.Atoi(strings.Replace(separateParam[2], "p=", "", -1))
+	threads, err = strconv.Atoi(strings.ReplaceAll(separateParam[2], "p=", ""))
 	if err != nil {
 		return argon2idHash{}, config{}, err
 	}
 
-	return argon2idHash{salt: salt, hash: hash}, config{saltLength: saltLength, memory: uint32(memory), threads: uint8(threads), iterations: uint32(iterations), keyLength: keyLength}, nil
+	argon2idStruct := argon2idHash{
+		salt: salt,
+		hash: hash,
+	}
+
+	hashConfig := config{
+		saltLength: saltLength,
+		memory:     uint32(memory),
+		threads:    uint8(threads),
+		iterations: uint32(iterations),
+		keyLength:  keyLength,
+	}
+
+	return argon2idStruct, hashConfig, nil
 }
