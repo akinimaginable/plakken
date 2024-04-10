@@ -1,0 +1,11 @@
+steps:
+  lint:
+    image: golang:1.22
+    commands:
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - golangci-lint run
+    when:
+      - event: pull_request
+        repo: gnouseu/plakken
+      - event: push
+        branch: main

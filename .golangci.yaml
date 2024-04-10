@@ -1,0 +1,25 @@
+linters:
+  enable-all: true
+  disable:
+    # Deprecated
+    - varcheck
+    - ifshort
+    - interfacer
+    - maligned
+    - deadcode
+    - scopelint
+    - golint
+    - structcheck
+    - exhaustivestruct
+    - nosnakecase
+    # Too extremist/unusable
+    - depguard
+    - varnamelen
+    - exhaustruct
+    - wsl
+    - contextcheck
+    - wrapcheck
+linters-settings:
+  lll:
+    # Too short byt default
+    line-length: 160
