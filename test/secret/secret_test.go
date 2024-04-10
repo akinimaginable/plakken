@@ -10,8 +10,17 @@ import (
 	"golang.org/x/crypto/argon2"
 )
 
-func TestPasswordFormat(t *testing.T) {
-	regex := fmt.Sprintf("\\$argon2id\\$v=%d\\$m=%d,t=%d,p=%d\\$[A-Za-z0-9+/]*\\$[A-Za-z0-9+/]*$", argon2.Version, constant.ArgonMemory, constant.ArgonIterations, constant.ArgonThreads)
+func TestSecret(t *testing.T) {
+	t.Parallel()
+
+	testPasswordFormat(t)
+	testVerifyPassword(t)
+	testVerifyPasswordInvalid(t)
+}
+
+func testPasswordFormat(t *testing.T) {
+	t.Helper()
+	regex := fmt.Sprintf("\\$argon2id\\$v=%d\\$m=%d,t=%d,p=%d\\$[A-Za-z0-9+/]*\\$[A-Za-z0-9+/]*$", argon2.Version, constant.ArgonMemory, constant.ArgonIterations, constant.ArgonThreads) //nolint:lll
 
 	got, err := secret.Password("Password!")
 	if err != nil {
@@ -24,8 +33,9 @@ func TestPasswordFormat(t *testing.T) {
 	}
 }
 
-func TestVerifyPassword(t *testing.T) {
-	result, err := secret.VerifyPassword("Password!", "$argon2id$v=19$m=65536,t=2,p=4$A+t5YGpyy1BHCbvk/LP1xQ$eNuUj6B2ZqXlGi6KEqep39a7N4nysUIojuPXye+Ypp0")
+func testVerifyPassword(t *testing.T) {
+	t.Helper()
+	result, err := secret.VerifyPassword("Password!", "$argon2id$v=19$m=65536,t=2,p=4$A+t5YGpyy1BHCbvk/LP1xQ$eNuUj6B2ZqXlGi6KEqep39a7N4nysUIojuPXye+Ypp0") //nolint:lll
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -35,8 +45,9 @@ func TestVerifyPassword(t *testing.T) {
 	}
 }
 
-func TestVerifyPasswordInvalid(t *testing.T) {
-	result, err := secret.VerifyPassword("notsamepassword", "$argon2id$v=19$m=65536,t=2,p=4$A+t5YGpyy1BHCbvk/LP1xQ$eNuUj6B2ZqXlGi6KEqep39a7N4nysUIojuPXye+Ypp0")
+func testVerifyPasswordInvalid(t *testing.T) {
+	t.Helper()
+	result, err := secret.VerifyPassword("notsamepassword", "$argon2id$v=19$m=65536,t=2,p=4$A+t5YGpyy1BHCbvk/LP1xQ$eNuUj6B2ZqXlGi6KEqep39a7N4nysUIojuPXye+Ypp0") //nolint:lll
 	if err != nil {
 		t.Fatal(err)
 	}

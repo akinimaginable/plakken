@@ -7,7 +7,25 @@ import (
 	"git.gnous.eu/gnouseu/plakken/internal/utils"
 )
 
-func TestCheckCharNotRedundantTrue(t *testing.T) { // Test CheckCharRedundant with redundant char
+func TestUtils(t *testing.T) {
+	t.Parallel()
+
+	testCheckCharNotRedundantTrue(t)
+	testCheckCharNotRedundantFalse(t)
+	testParseExpirationFull(t)
+	testParseExpirationMissing(t)
+	testParseExpirationWithCaps(t)
+	testParseExpirationNull(t)
+	testParseExpirationNegative(t)
+	testParseExpirationInvalid(t)
+	testParseExpirationInvalidRedundant(t)
+	testParseExpirationInvalidTooHigh(t)
+	testValidKey(t)
+	testInValidKey(t)
+}
+
+func testCheckCharNotRedundantTrue(t *testing.T) { // Test CheckCharRedundant with redundant char
+	t.Helper()
 	want := true
 	got := utils.CheckCharRedundant("2d1h3md4h7s", "h")
 	if got != want {
@@ -15,7 +33,8 @@ func TestCheckCharNotRedundantTrue(t *testing.T) { // Test CheckCharRedundant wi
 	}
 }
 
-func TestCheckCharNotRedundantFalse(t *testing.T) { // Test CheckCharRedundant with not redundant char
+func testCheckCharNotRedundantFalse(t *testing.T) { // Test CheckCharRedundant with not redundant char
+	t.Helper()
 	want := false
 	got := utils.CheckCharRedundant("2d1h3m47s", "h")
 	if got != want {
@@ -23,7 +42,8 @@ func TestCheckCharNotRedundantFalse(t *testing.T) { // Test CheckCharRedundant w
 	}
 }
 
-func TestParseExpirationFull(t *testing.T) { // test parseExpirationFull with all valid separator
+func testParseExpirationFull(t *testing.T) { // test parseExpirationFull with all valid separator
+	t.Helper()
 	result, _ := utils.ParseExpiration("2d1h3m47s")
 	correctValue := 176627
 	if result != correctValue {
@@ -31,7 +51,8 @@ func TestParseExpirationFull(t *testing.T) { // test parseExpirationFull with al
 	}
 }
 
-func TestParseExpirationMissing(t *testing.T) { // test parseExpirationFull with all valid separator
+func testParseExpirationMissing(t *testing.T) { // test parseExpirationFull with all valid separator
+	t.Helper()
 	result, _ := utils.ParseExpiration("1h47s")
 	correctValue := 3647
 	if result != correctValue {
@@ -39,7 +60,8 @@ func TestParseExpirationMissing(t *testing.T) { // test parseExpirationFull with
 	}
 }
 
-func TestParseExpirationWithCaps(t *testing.T) { // test parseExpirationFull with all valid separator
+func testParseExpirationWithCaps(t *testing.T) { // test parseExpirationFull with all valid separator
+	t.Helper()
 	result, _ := utils.ParseExpiration("2D1h3M47s")
 	correctValue := 176627
 	if result != correctValue {
@@ -47,7 +69,8 @@ func TestParseExpirationWithCaps(t *testing.T) { // test parseExpirationFull wit
 	}
 }
 
-func TestParseExpirationNull(t *testing.T) { // test ParseExpirationFull with all valid separator
+func testParseExpirationNull(t *testing.T) { // test ParseExpirationFull with all valid separator
+	t.Helper()
 	result, _ := utils.ParseExpiration("0")
 	correctValue := 0
 	if result != correctValue {
@@ -55,7 +78,8 @@ func TestParseExpirationNull(t *testing.T) { // test ParseExpirationFull with al
 	}
 }
 
-func TestParseExpirationNegative(t *testing.T) { // test ParseExpirationFull with all valid separator
+func testParseExpirationNegative(t *testing.T) { // test ParseExpirationFull with all valid separator
+	t.Helper()
 	_, got := utils.ParseExpiration("-42h1m4s")
 	want := &utils.ParseExpirationError{}
 	if !errors.As(got, &want) {
@@ -63,16 +87,17 @@ func TestParseExpirationNegative(t *testing.T) { // test ParseExpirationFull wit
 	}
 }
 
-func TestParseExpirationInvalid(t *testing.T) { // test ParseExpirationFull with all valid separator
+func testParseExpirationInvalid(t *testing.T) { // test ParseExpirationFull with all valid separator
+	t.Helper()
 	_, got := utils.ParseExpiration("8h42h1m1d4s")
 	want := &utils.ParseExpirationError{}
 	if !errors.As(got, &want) {
 		t.Fatal("Error in ParseExpirationFull, want : ", want, "got : ", got)
 	}
-
 }
 
-func TestParseExpirationInvalidRedundant(t *testing.T) { // test ParseExpirationFull with all valid separator
+func testParseExpirationInvalidRedundant(t *testing.T) { // test ParseExpirationFull with all valid separator
+	t.Helper()
 	_, got := utils.ParseExpiration("8h42h1m1h4s")
 	want := &utils.ParseExpirationError{}
 	if !errors.As(got, &want) {
@@ -80,7 +105,8 @@ func TestParseExpirationInvalidRedundant(t *testing.T) { // test ParseExpiration
 	}
 }
 
-func TestParseExpirationInvalidTooHigh(t *testing.T) { // test ParseExpirationFull with all valid separator
+func testParseExpirationInvalidTooHigh(t *testing.T) { // test ParseExpirationFull with all valid separator
+	t.Helper()
 	_, got := utils.ParseExpiration("2d1h3m130s")
 	want := &utils.ParseExpirationError{}
 	if !errors.As(got, &want) {
@@ -88,7 +114,8 @@ func TestParseExpirationInvalidTooHigh(t *testing.T) { // test ParseExpirationFu
 	}
 }
 
-func TestValidKey(t *testing.T) { // test ValidKey with a valid key
+func testValidKey(t *testing.T) { // test ValidKey with a valid key
+	t.Helper()
 	got := utils.ValidKey("ab_a-C42")
 	want := true
 
@@ -97,7 +124,8 @@ func TestValidKey(t *testing.T) { // test ValidKey with a valid key
 	}
 }
 
-func TestInValidKey(t *testing.T) { // test ValidKey with invalid key
+func testInValidKey(t *testing.T) { // test ValidKey with invalid key
+	t.Helper()
 	got := utils.ValidKey("ab_?a-C42")
 	want := false
 

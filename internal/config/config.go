@@ -4,19 +4,21 @@ import (
 	"log"
 	"os"
 	"strconv"
+
+	"git.gnous.eu/gnouseu/plakken/internal/constant"
 )
 
-// InitConfig Structure for program initialisation
+// InitConfig Structure for program initialisation.
 type InitConfig struct {
 	ListenAddress string
 	RedisAddress  string
 	RedisUser     string
 	RedisPassword string
 	RedisDB       int
-	UrlLength     uint8
+	URLLength     uint8
 }
 
-// GetConfig Initialise configuration form .env
+// GetConfig Initialise configuration form .env.
 func GetConfig() InitConfig {
 	listenAddress := os.Getenv("PLAKKEN_LISTEN")
 	redisAddress := os.Getenv("PLAKKEN_REDIS_ADDRESS")
@@ -37,7 +39,7 @@ func GetConfig() InitConfig {
 		log.Fatal("Invalid PLAKKEN_URL_LENGTH")
 	}
 
-	if urlLength > 255 {
+	if urlLength > constant.MaxURLLength {
 		log.Fatal("PLAKKEN_URL_LENGTH cannot be greater than 255")
 	}
 
@@ -47,6 +49,6 @@ func GetConfig() InitConfig {
 		RedisUser:     os.Getenv("PLAKKEN_REDIS_USER"),
 		RedisPassword: os.Getenv("PLAKKEN_REDIS_PASSWORD"),
 		RedisDB:       redisDB,
-		UrlLength:     uint8(urlLength),
+		URLLength:     uint8(urlLength),
 	}
 }

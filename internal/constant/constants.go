@@ -11,4 +11,8 @@ const (
 	ArgonThreads         = 4
 	ArgonKeyLength       = 32
 	ArgonIterations      = 2
+	MaxURLLength         = 255
+	SecondsInDay         = 86400
+	SecondsInHour        = 3600
+	SecondsInMinute      = 60
 )
