@@ -1,0 +1,130 @@
+@use 'colors' as *;
+
+@use 'inputs';
+@use 'recents';
+@use 'misc';
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(inter.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(jetbrainsmono.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+body {
+  background-color: $background;
+  color: $text;
+  font: 400 16px/2 "Inter", "system-ui", sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.fr {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+#line-numbers,
+#content {
+  font: 400 14px/1.6 "JetBrains Mono", monospace;
+}
+
+#line-numbers {
+  color: $placeholder;
+  padding: 16px 1px;
+  text-align: center;
+  white-space: pre;
+  width: 30px;
+}
+
+#content {
+  color: $text;
+  height: 100%;
+  min-height: 90vh;
+  padding: 16px 16px 0 16px;
+  width: calc(100vw - 65px);
+}
+
+.menu {
+  gap: 18px;
+  position: fixed;
+  right: 16px;
+  top: 16px;
+
+  svg {
+    cursor: pointer;
+    height: 24px;
+    fill: none;
+    margin-bottom: -6px;
+    stroke: $text;
+    stroke-width: 2;
+    width: 24px;
+  }
+}
+
+button,
+input,
+select {
+  background-color: $background;
+  border: 2px solid $border;
+  color: $text;
+  font: 500 14px/2 "Inter", "system-ui", sans-serif;
+  max-width: 145px;
+  outline: none;
+  padding: 3px 10px;
+  transition: border .15s ease;
+  width: min-content;
+  
+
+  &::placeholder {
+    color: $placeholder;
+  }
+
+  &:hover {
+    border-color: #777;
+  }
+
+  &:focus-visible {
+    border: 2px solid #bbb;
+  }
+}
+
+select {
+  padding: 8px 10px;
+  width: fit-content;
+}
+
+select:focus {
+  background-color: $background;
+  transition: none;
+}
+
+option {
+  background-color: $background;
+  color: $text;
+
+  &:focus {
+    background-color: $accent;
+    color: $background;
+  }
+}
+
+textarea {
+  background-color: inherit;
+  border: none;
+  margin: 0;
+  outline: none;
+  resize: none;
+}
