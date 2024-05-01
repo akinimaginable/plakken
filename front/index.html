@@ -2,58 +2,59 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta content="Plakken, paste, pastebin" name="keywords">
-  <meta content="Plakken is a simple open-source paste service where you can store text for a set period of time."
-    name="description">
-  <meta content="Gnous EU" name="author">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <link href="/static/favicon.svg" rel="icon">
-  <title>New paste</title>
-  <link href="../static/style.css" rel="stylesheet">
-  <script async src="../static/app.js"></script>
+    <meta charset="UTF-8">
+    <meta content="Plakken, paste, pastebin" name="keywords">
+    <meta content="Plakken is a simple open-source paste service where you can store text for a set period of time."
+          name="description">
+    <meta content="Gnous EU" name="author">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="/static/favicon.svg" rel="icon">
+    <title>New paste</title>
+    <link href="style.css" rel="stylesheet">
+    <script async src="../static/app.js"></script>
 </head>
 
 <body>
-  <form class="fr" method="post">
+<form action="/create/" class="fr" method="post">
     <div id="line-numbers">1</div>
     <label for="content"><textarea autofocus id="content" name="content"
-        placeholder="Type your paste here"></textarea></label>
-  </form>
-  <div class="menu fr">
-    <label for="filename"><input id="filename" name="filename" placeholder="Filename" type="text"></label>
-    <!--<label for="password"><input id="password" placeholder="Password" type="password"></label>-->
-    <label for="exp"><input id="exp" name="exp" placeholder="Expiration (1d1h1m1s)" type="text"></label>
-    <label for="type">
-      <select id="type" name="type">zz
-        <option value="c">C/C++</option>
-        <option value="csharp">C#</option>
-        <option value="css">CSS</option>
-        <option value="go">Go</option>
-        <option value="java">Java</option>
-        <option value="js">Javascript</option>
-        <option value="html">HTML</option>
-        <option selected value="pt">Plaintext</option>
-        <option value="py">Python</option>
-        <option value="rb">Ruby</option>
-        <option value="rs">Rust</option>
-        <option value="sh">Shell</option>
-        <option value="sql">SQL</option>
-        <option value="ts">Typescript</option>
-        <option value="xml">XML</option>
-        <option value="yml">YAML</option>
-      </select>
-    </label>
-    <button title="Save plak" type="submit">Save</button>
-  </div>
-  <section id="recent-plaks">
+                                   placeholder="Type your paste here"></textarea></label>
+
+    <div class="menu fr">
+        <label for="filename"><input id="filename" name="filename" placeholder="Filename" type="text"></label>
+        <!--<label for="password"><input id="password" placeholder="Password" type="password"></label>-->
+        <label for="exp"><input id="exp" name="exp" placeholder="Expiration (1d1h1m1s)" type="text"></label>
+        <label for="type">
+            <select id="type" name="type">zz
+                <option value="c">C/C++</option>
+                <option value="csharp">C#</option>
+                <option value="css">CSS</option>
+                <option value="go">Go</option>
+                <option value="java">Java</option>
+                <option value="js">Javascript</option>
+                <option value="html">HTML</option>
+                <option selected value="pt">Plaintext</option>
+                <option value="py">Python</option>
+                <option value="rb">Ruby</option>
+                <option value="rs">Rust</option>
+                <option value="sh">Shell</option>
+                <option value="sql">SQL</option>
+                <option value="ts">Typescript</option>
+                <option value="xml">XML</option>
+                <option value="yml">YAML</option>
+            </select>
+        </label>
+        <button title="Save plak" type="submit">Save</button>
+    </div>
+</form>
+<section id="recent-plaks">
     <div class="title fr">
-      <h3>Recent plaks</h2>
-        <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" stroke-width="2.5">
-          <polyline points="6 9 12 15 18 9"></polyline>
+        <h3>Recent plaks</h3>
+        <svg height="32" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" width="32">
+            <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
     </div>
-  </section>
+</section>
 </body>
 
 </html>
