@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"errors"
 	"log"
 	mathrand "math/rand/v2"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -105,4 +107,11 @@ func ValidKey(key string) bool {
 	log.Println(key, result)
 
 	return result
+}
+
+// FileExist verify if a file exist.
+func FileExist(path string) bool {
+	_, err := os.Stat(path)
+
+	return !errors.Is(err, os.ErrNotExist)
 }
