@@ -4,7 +4,7 @@ steps:
     settings:
       repo: git.gnous.eu/${CI_REPO_OWNER}/plakken
       dockerfile: docker/Dockerfile
-      platforms: linux/amd64,linux/arm64/v8,linux/arm
+      platforms: linux/amd64,linux/arm64/v8,linux/arm/darwin/arm64/darwin/amd64
       registry: https://git.gnous.eu
       tag: ${CI_COMMIT}
       username:
@@ -19,7 +19,7 @@ steps:
     settings:
       repo: git.gnous.eu/${CI_REPO_OWNER}/plakken
       dockerfile: docker/Dockerfile
-      platforms: linux/amd64,linux/arm64/v8,linux/arm
+      platforms: linux/amd64,linux/arm64/v8,linux/arm/darwin/arm64/darwin/amd64
       registry: https://git.gnous.eu
       tags:
         - ${CI_COMMIT_TAG##v} # Remove v from tag
