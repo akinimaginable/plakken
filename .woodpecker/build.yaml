@@ -3,7 +3,7 @@ steps:
     image: woodpeckerci/plugin-docker-buildx
     settings:
       repo: git.gnous.eu/${CI_REPO_OWNER}/plakken
-      dockerfile: docker/Dockerfile
+      dockerfile: deployement/docker/Dockerfile
       platforms: linux/amd64,linux/arm64/v8,linux/arm
       registry: https://git.gnous.eu
       tag: ${CI_COMMIT}
@@ -18,7 +18,7 @@ steps:
     image: woodpeckerci/plugin-docker-buildx
     settings:
       repo: git.gnous.eu/${CI_REPO_OWNER}/plakken
-      dockerfile: docker/Dockerfile
+      dockerfile: deployement/docker/Dockerfile
       platforms: linux/amd64,linux/arm64/v8,linux/arm
       registry: https://git.gnous.eu
       tags:
