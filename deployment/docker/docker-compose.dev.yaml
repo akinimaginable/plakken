@@ -4,16 +4,13 @@ networks:
   plakken:
     external: false
 
-volumes:
-  redis:
-    driver: local
-
 services:
   server:
-    image: git.gnous.eu/gnouseu/plakken:latest
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
     restart: always
     container_name: plakken
-    read_only: true
     networks:
       - plakken
     ports:
@@ -32,5 +29,3 @@ services:
       test: [ "CMD", "redis-cli", "ping" ]
     networks:
       - plakken
-    volumes:
-      - redis:/data
