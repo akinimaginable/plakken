@@ -45,7 +45,7 @@ func parseIntBeforeSeparator(source *string, sep string) (int, error) { // retur
 			return 0, &parseIntBeforeSeparatorError{message: *source + ": format only take positive value"}
 		}
 
-		if value > 99 { //nolint:gomnd
+		if value > 99 { //nolint:mnd
 			return 0, &parseIntBeforeSeparatorError{message: *source + ": Format only take two number"}
 		}
 

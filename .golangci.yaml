@@ -12,6 +12,8 @@ linters:
     - structcheck
     - exhaustivestruct
     - nosnakecase
+    - gomnd
+    - execinquery
     # Too extremist/unusable
     - depguard
     - varnamelen
