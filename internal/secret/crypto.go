@@ -99,7 +99,7 @@ func VerifyPassword(password string, hash string) (bool, error) {
 // parseHash parse existing encoded argon2id string.
 func parseHash(source string) (argon2idHash, config, error) {
 	separateItem := strings.Split(source, "$")
-	if len(separateItem) != 6 { //nolint:gomnd
+	if len(separateItem) != 6 { //nolint:mnd
 		return argon2idHash{}, config{}, &parseError{message: "Hash format is not valid"}
 	}
 
@@ -108,7 +108,7 @@ func parseHash(source string) (argon2idHash, config, error) {
 	}
 
 	separateParam := strings.Split(separateItem[3], ",")
-	if len(separateParam) != 3 { //nolint:gomnd
+	if len(separateParam) != 3 { //nolint:mnd
 		return argon2idHash{}, config{}, &parseError{message: "Hash config is not valid"}
 	}
 
