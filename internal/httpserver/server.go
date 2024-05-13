@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"git.gnous.eu/gnouseu/plakken/internal/constant"
+	"git.gnous.eu/gnouseu/plakken/internal/web/health"
 	"git.gnous.eu/gnouseu/plakken/internal/web/plak"
 	"github.com/redis/go-redis/v9"
 )
@@ -40,6 +41,7 @@ func (config ServerConfig) router() {
 
 	http.HandleFunc("GET /{$}", config.home)
 	http.Handle("GET /static/{file}", http.FileServer(staticFiles))
+	http.HandleFunc("GET /health/", health.Config{DB: config.DB}.Health)
 	http.HandleFunc("GET /{key}/{settings...}", WebConfig.View)
 	http.HandleFunc("POST /{$}", WebConfig.CurlCreate)
 	http.HandleFunc("POST /create/{$}", WebConfig.PostCreate)
