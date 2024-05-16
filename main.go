@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"log"
+	"time"
 
 	"git.gnous.eu/gnouseu/plakken/internal/config"
 	"git.gnous.eu/gnouseu/plakken/internal/database"
@@ -31,6 +32,7 @@ func main() {
 		DB:         db,
 		Static:     static,
 		Templates:  templates,
+		StartTime:  time.Now(),
 	}
 
 	serverConfig.Server()

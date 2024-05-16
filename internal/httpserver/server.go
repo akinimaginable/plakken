@@ -4,10 +4,11 @@ import (
 	"embed"
 	"log"
 	"net/http"
+	"time"
 
 	"git.gnous.eu/gnouseu/plakken/internal/constant"
-	"git.gnous.eu/gnouseu/plakken/internal/web/health"
 	"git.gnous.eu/gnouseu/plakken/internal/web/plak"
+	"git.gnous.eu/gnouseu/plakken/internal/web/status"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -17,6 +18,7 @@ type ServerConfig struct {
 	DB         *redis.Client
 	Static     embed.FS
 	Templates  embed.FS
+	StartTime  time.Time
 }
 
 func (config ServerConfig) home(w http.ResponseWriter, _ *http.Request) {
@@ -41,7 +43,9 @@ func (config ServerConfig) router() {
 
 	http.HandleFunc("GET /{$}", config.home)
 	http.Handle("GET /static/{file}", http.FileServer(staticFiles))
-	http.HandleFunc("GET /health/", health.Config{DB: config.DB}.Health)
+	http.HandleFunc("GET /readyz", status.Config{DB: config.DB}.Ready)
+	http.HandleFunc("GET /infoz", status.Config{DB: config.DB, StartTime: config.StartTime}.Info)
+	http.HandleFunc("GET /healthz", status.Config{DB: config.DB}.Health)
 	http.HandleFunc("GET /{key}/{settings...}", WebConfig.View)
 	http.HandleFunc("POST /{$}", WebConfig.CurlCreate)
 	http.HandleFunc("POST /create/{$}", WebConfig.PostCreate)
