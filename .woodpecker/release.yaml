@@ -1,6 +1,6 @@
 steps:
   - name: Build
-    image: golang:1.22
+    image: golang:1.23
     commands:
       - go mod download
       - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s" -o plakken-linux-amd64 # Enable static binary, target Linux, remove debug information and strip binary
